@@ -1,0 +1,205 @@
+---
+title: "Economic situation across multiple dimensions in the US before, during and after the Great Recession"
+author: Bala Durga Sridevi Kesavarapu
+output: html_document
+---
+
+
+
+```{r lib, echo=FALSE, include=TRUE,warning=FALSE,message=FALSE,error=FALSE}
+
+library(tidyverse)
+library(readxl)
+library(knitr)
+library(ggrepel)
+library(plotly)
+library(kableExtra)
+library(DT)
+
+library(summarytools)
+```
+# {.tabset .tabset-fade .tabset-pills}
+<font size="3">
+*Recession* can be explained as several months of declines across the economic board, including real Gross Domestic Product, real income, employment, industrial output and wholesale and retail sales. The real estate market is highly correlated with the strength of the overall economy, which is cyclical. As the economy bottoms out, so does the housing market, causing residential real estate values to fall as the market corrects itself in response to a slower economy.In 2006, the bubble burst as housing prices started to decline. This caught many homeowners off guard, who had taken loans with little money down. As they realized they would lose money by selling the house for less than their mortgage, they foreclosed. The following graphs indicate the impact of great recession on United States on **Realestate**,**Poverty**,**Unemployment**,**Stockmarket to GDP** factors.This report visualizes the before and after recession impact on United States with each tab.
+</font>
+
+
+
+<hr/>
+## **United States Housing Bubble**
+
+### **Impact of recession on Real Estate**
+<font size="3">
+The recession that ended in 2009 had a substantial effect on home prices, and the recession itself was tied into the collapse of the real estate market.The housing market significantly weakened in the wake of the Great Recession, an economic downturn so dramatic that home values were slashed, origination volumes slowed and prospective buyers refrained from entering the market. By 2006, the "housing bubble" began to burst. In late 2007, the economy fell into recession. The housing market continued to soften, people began to lose their jobs, and the banking industry was in crisis.
+
+To explain the value of houses before and after, i have taken the data from 2000-2015. There was increase in the house value from the year 200-2006, starting from 2007 the value began to decrease and in 2009 it dropped to a lowest of $269350.Home ownership rates dropped lending credence to the speculation that real estate lending tightened up combined with an increase in delinquencies and foreclosures. As a result caused many people were not be able to buy new homes.
+</font>
+
+
+```{r House, echo=FALSE,warning=FALSE,message=FALSE,error=FALSE}
+house <- read_excel("Dataset/houseprice.xls")
+ggplot(house, aes(Date, `Houses Sale Price`)) +
+  geom_point(aes(colour = Date)) +
+    geom_point(size = 3, shape = 8, data = house) +
+    geom_smooth(se = TRUE) +
+    ggrepel::geom_label_repel(aes(label = `Houses Sale Price`), data = house)+
+  labs(title = "Houses Sale Price", x="Year", y="Thousands of Dollars", colour="Year") 
+```
+
+
+### **Medain House Prices**
+<font size="3">
+
+The median house price is essentially the sale price of the middle home in a list of sales where the sales are arranged in order from lowest to highest price. To understand the median house prices before and after recession,the data is taken from the years 2000-2018.During 2008,the median house price dropped to $215650.From 2013 there has been increase in the house price.
+
+</font>
+
+
+```{r Medianhouse, echo=FALSE,warning=FALSE,message=FALSE,error=FALSE,fig.height=8,fig.width=13}
+median <- read_excel("Dataset/medianhouse.xls")
+ median$Date <- format(median$Date,"%Y")
+ ggplot(median, aes(Date,`Median Sale Prices of Houses`)) +
+  geom_col(aes(x = factor(median$Date), y = `Median Sale Prices of Houses`, fill=factor(median$Date)))+
+   labs(title = "Median Sale Prices of Houses ", x="Year", y="Thousands of Dollars", colour="Date") +
+   ggrepel::geom_label_repel(aes(label = `Median Sale Prices of Houses`), data = median)
+```
+
+
+
+## **Poverty**
+### **Percentage of people in poverty**
+ <font size="3">
+In 2011 the official poverty rate increased from to 15.0% which was 13% in 2011.The poverty rate was also approximately 15 percent in the recessions of the early 1980s and early 1990s even though these were more moderate downturns. The poverty rate did not increase more in the current downturn in part because of federal stimulus spending.The increase in poverty extended beyond the formal end of the recession; and poverty is likely to remain high for some time.The increased government spending on unemployment insurance caused relative slow increase in poverty.
+</font>
+
+ 
+```{r Poverty, echo=FALSE, warning=FALSE, message=FALSE, error=FALSE}
+  pov <- read_excel("Dataset/poverty.xls")
+  view(pov)
+  pov$Date <- format(pov$Date,"%Y")
+  ggplot(pov, aes(pov$Date,pov$`people in poverty`, colour = Date)) +
+    geom_line(linetype="dashed",size=1,color="black",group=1)+
+    labs(title = "Percentage of People in Poverty", x="Year", y="Percentage of Persons", colour="Year")+
+    annotate(geom = "text", x = 10, y = 12.5, label = "Rise in poverty")+
+    ggrepel::geom_label_repel(aes(label = `people in poverty`), data = pov)
+
+```
+
+### **People of all ages in poverty**
+<font size="3">
+In addition, those poor unemployed individuals not raising minor children who don't qualify for
+unemployment insurance no longer are eligible for any type of cash assistance.The poverty after recession period gradually increased and it did not seem to be stabilized. Starting from 2008 there were 39M people who are in poverty and it grew high to 48M in 2010.
+</font>
+
+```{r Povertyages, echo=FALSE, warning=FALSE, message=FALSE, error=FALSE,fig.height=8,fig.width=15}
+  povage <- read_excel("Dataset/povert ages.xls")
+  view(povage)
+  povage$Date <- format(povage$Date,"%Y")
+  ggplot(povage, aes(Date,`Poverty in ages`,group=1,fill=Date)) +
+    geom_col()+ 
+    labs(title = "People of all ages in Poverty", x="Year", y="Millions of Persons")+
+    ggrepel::geom_text_repel(aes(label =povage$`Poverty in ages`), colour="black",data = povage,fontface = 'bold',fontsize=2)
+
+```
+
+## **Unemployment**
+### **Rate of unemployment**
+<font size="3">
+The unemployment rate by year is the percent of unemployed in the labor force. It tracks the health of the country's economy. Unemployment rises during recessions and falls during prosperity.The unemployment rate striked high to 74% in 2008 and rasied to 75% in 2009 due to the mass layoffs during recession. It took it significantly decreased from 2010.
+</font>
+
+```{r unemployment, echo=FALSE, warning=FALSE, message=FALSE, error=FALSE,fig.width=12}
+unemp <- read_excel("Dataset/unemployment.xls")
+view(unemp)
+a <- ggplot(unemp, aes(Date,unemp$`Rate of Unemployment`))
+a + geom_point(colour="black", size = 5) +
+    geom_point(colour="pink", size = 4)+
+  labs(title="Unemployment Rate", x="Year", y="Percent")+
+  ggrepel::geom_text_repel(aes(label =unemp$`Rate of Unemployment`), data = unemp)
+```
+
+
+### **Population to unemployment ratio**
+<font size="3">
+There is a percentage of decline of the population in the labor force and it caused sharp rise in unemployment.The percentage of the population with a job fell sharply in the recession and stayed low through much of the recovery as a result of rising unemployment and declining labor force participation, . It began to move up in 2014 and 2015. The labor force participation rate averaged 58.3 in 2014 and 58.7 in 2015.
+</font>
+
+```{r populationtounemp, echo=FALSE, warning=FALSE, message=FALSE, error=FALSE}
+popunemp <- read_excel("Dataset/populationtounemployment.xls")
+popunemp$Date <- format(popunemp$Date,"%Y")
+ggplot(popunemp, aes(Date,popunemp$Rate)) +
+  geom_point(stat='summary') +
+  stat_summary(fun.y=sum, geom="line",group=1)+
+  ggrepel::geom_label_repel(aes(label =popunemp$Rate), data = popunemp)+
+  labs(title="Population to Unemployment Ratio", x="Year", y="Percent")
+
+
+```
+
+
+## **Stock Market**
+### **stock market crash**
+<font size="3">
+A recession affects the companies whose shares make up the stock market, and it affects the people who invest in those companies' stocks.The result of a company's stock price falling during a recession is a decrease in earnings. When earnings decrease, so do dividends since companies pay cash dividends through earnings.The stock market will reflect the economic conditions of an economy. If an economy is growing then output will be increasing and most firms should be experiencing increased profitability.Consumer spending drops when stock prices decrease.rapid decline in the stock markets severely affected business and consumer confidence. It also caused banks to lose money.The stock market effect can be seen on GDP as 93% during 2008.It was stabilizing after 2013.
+</font>
+
+```{r stocks, echo=FALSE, warning=FALSE, message=FALSE, error=FALSE,fig.width=12}
+stocks <- read_excel("Dataset/stock.xls")
+stocks$`Stock Market Capitalization to GDP`<- round(stocks$`Stock Market Capitalization to GDP`,1)
+ggplot(stocks, aes(Date, `Stock Market Capitalization to GDP`, colour = Date)) +
+  geom_line(color="purple") +
+  labs(title = "Stock Market Capitalization to GDP", x="Year", y="Percent", colour="Year")+
+  geom_label(aes(label=`Stock Market Capitalization to GDP`), nudge_x = 1, nudge_y = 1, check_overlap= TRUE)
+  library(plotly)
+```
+
+## **GDP**
+### **personal consumption expenditure**
+<font size="3">
+ U.S. consumer spending declined by an estimated 3.2 million jobs between 2007 and 2010.Consumer spending and its related employment are projected to grow slower than in the past and at rates similar to the overall economy.The personal consumption expenditure increased during 2008 by $97 Million and since then it's been increasing due to cumulative effects.GDP growth decline is a result of long term impact by the recession.
+ </font>
+
+```{r Expenditure, echo=FALSE, warning=FALSE, message=FALSE, error=FALSE,fig.width=12}
+Expend <- read_excel("Dataset/expenditure.xls")
+Expend$PCE <- round(Expend$PCE)
+  ggplot(Expend, aes(Expend$Year,Expend$PCE,group=1,fill=Year)) +
+    geom_col()+ 
+    labs(title = "Personal Consumption Expenditure", x="Year", y="Millions of dollars")+
+    ggrepel::geom_text_repel(aes(label =Expend$PCE), colour="black",data = Expend,fontface = 'bold',fontsize=2)
+  
+```
+
+
+### **Gross Domestic Product**
+<font size="3">
+The economic activity is measured by GDP.Lay offs are caused due to the losses incurred when there is increase in unemployment which leads to less growth.It is evident that the GDP has declined during 2009 and then slowly recovred after 2013.
+</font>
+
+```{r Grossp, echo=FALSE, warning=FALSE, message=FALSE, error=FALSE, fig.width=12}
+gross <- read_excel("Dataset/GDP.xlsx")
+ ggplot(gross, aes(x= Date,y= gross$GDPA ,color= Date))+
+   geom_bin2d()+
+   labs(title = "Gross Domestic Product", x="Year", y="Billions of Dollars", colour="Date")+
+   ggrepel::geom_text_repel(aes(label =gross$GDPA), colour="black",data = gross,fontface = 'bold',fontsize=2)
+ 
+```
+
+
+## **References**
+
+<font size="3">
+
+https://fred.stlouisfed.org/
+
+https://www.zillow.com/research/data/
+
+https://www.bls.gov/opub/mlr/2014/article/consumer-spending-and-us-employment-from-the-recession-through-2022.htm
+
+</font>
+
+
+
+
+
+
+
