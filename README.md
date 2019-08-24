@@ -1,1 +1,2 @@
 # R
+Describing the economic situation across multiple dimensions in the US before, during and after the Great Recession and developed visualizations and reports using R.The over-arching goal is to tell a cogent multi-dimensional story by using data from and a variety of data visualization techniques and narratives in R Markdown to describe a phenomenon from multiple perspectives. Used R markdown to tell a story.
